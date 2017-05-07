@@ -1,0 +1,63 @@
+---
+- name: Ensure python is installed
+  hosts: all
+  user: root
+  gather_facts: False
+  tasks:
+    - name: install python 2
+      raw: test -e /usr/bin/python || (sudo apt -y update && sudo apt install -y python-minimal)
+      changed_when: False
+
+- name: Create user
+  hosts: all
+  user: root
+  tasks:
+    - name: Create user
+      user:
+        name: kieran
+        password: "{{ 'password' | password_hash('sha512') }}"
+        groups: admin
+        shell: /bin/bash
+        update_password: on_create
+      register: kieran
+    - name: Set authorized key
+      authorized_key:
+        user: kieran
+        state: present
+        key: https://github.com/kieranajp.keys
+    - name: Force kieran to change password
+      shell: chage -d 0 kieran
+      when: kieran.changed
+
+- name: Install Hugo
+  hosts: all
+  user: root
+  tasks:
+    - name: Install Hugo from apt
+      apt:
+        name: hugo
+        update_cache: yes
+
+- name: Configure server
+  hosts: all
+  user: root
+  gather_facts: True
+  vars:
+    ansible_pkg_mgr: apt
+  roles:
+    - role: antoiner77.caddy
+      caddy_features: http.git,http.hugo
+      caddy_config: |
+        test.kieranajp.uk
+        gzip
+        tls me@kieranajp.co.uk
+
+        root /srv/kieranajp.uk/public
+
+        git {
+          repo gitlab.com/kieranajp/kieranajp.uk
+          path: ../
+          key /root/.ssh/id_rsa
+          then hugo
+        }
+      tags: ["caddy"]
