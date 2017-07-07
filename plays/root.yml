@@ -4,9 +4,8 @@
   user: root
   gather_facts: False
   tasks:
-    - name: install python 2
-      raw: test -e /usr/bin/python || (sudo apt -y update && sudo apt install -y python-minimal)
-      changed_when: False
+    - name: install python2
+      raw: test -e /usr/bin/python || (sudo apt -y update && sudo apt install -y python-minimal python-pip)
 
 - name: Set up users on new server
   hosts: all

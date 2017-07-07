@@ -6,5 +6,4 @@ apt_packages:
   - jq
   - unzip
   - mosh
-  - hugo
   - xclip

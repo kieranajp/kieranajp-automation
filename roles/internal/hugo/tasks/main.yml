@@ -1,0 +1,4 @@
+---
+- name: Install Hugo .deb
+  apt:
+    deb: https://github.com/gohugoio/hugo/releases/download/{{ hugo_version }}/hugo_{{ hugo_version }}_Linux-64bit.deb

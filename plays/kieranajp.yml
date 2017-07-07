@@ -1,18 +1,19 @@
 ---
 - name: Ensure python is installed
   hosts: all
-  user: root
+  become: True
   gather_facts: False
   tasks:
-    - name: install python 2
-      raw: test -e /usr/bin/python || (sudo apt -y update && sudo apt install -y python-minimal)
-      changed_when: False
+    - name: install python2
+      raw: test -e /usr/bin/python || (sudo apt -y update && sudo apt install -y python-minimal python-pip)
 
 - name: Install software on server
   hosts: all
   become: True
   roles:
     - { role: apt,        tags: ["apt"] }
+    - { role: hugo,       tags: ["hugo"] }
     - { role: filesystem, tags: ["filesystem", "caddy"] }
-    - { role: nodejs,     tags: ["nodejs"] }
+    - { role: nodejs,     tags: ["nodejs", "caddy"] }
+    - { role: pip,        tags: ["pip", "caddy"] }
     - { role: caddy,      tags: ["caddy"] }

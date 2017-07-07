@@ -1,0 +1,4 @@
+---
+pip_packages:
+  - pygments
+  - pygments-style-solarized
