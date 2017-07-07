@@ -44,7 +44,7 @@
 
 - name: Push the generated ssh key to the Gitlab instance
   uri:
-    url: "{{ gitlab_api_url }}/user/keys"
+    url: "{{ gitlab_api_url }}user/keys"
     method: POST
     status_code: 201
     body_format: json
