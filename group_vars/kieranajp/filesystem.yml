@@ -1,0 +1,7 @@
+---
+filesystem:
+  - path: /srv/www
+    type: directory
+    permissions: "0755"
+    owner: caddy
+    group: admin

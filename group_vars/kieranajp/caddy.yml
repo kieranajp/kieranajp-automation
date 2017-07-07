@@ -1,0 +1,23 @@
+---
+ansible_pkg_manager: apt
+caddy_user: caddy
+caddy_features: http.git,http.hugo
+caddy_log_file: /var/log/caddy/caddy.log
+caddy_setcap: yes
+caddy_systemd_capabilities_enabled: yes
+caddy_systemd_network_dependency: False
+caddy_systemd_protect_home: False
+caddy_config: |
+  test.kieranajp.uk
+  gzip
+  tls me@kieranajp.co.uk
+
+  root /srv/www/kieranajp.uk/public
+
+  git gitlab.com/kieranajp/kieranajp.uk {
+    path ../
+    interval 600
+    key /home/caddy/.ssh/id_rsa
+    then brunch build
+    then hugo
+  }

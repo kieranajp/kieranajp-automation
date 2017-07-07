@@ -8,11 +8,8 @@
       raw: test -e /usr/bin/python || (sudo apt -y update && sudo apt install -y python-minimal)
       changed_when: False
 
-- name: Install software on server
+- name: Set up users on new server
   hosts: all
-  become: True
+  user: root
   roles:
-    - { role: apt,        tags: ["apt"] }
-    - { role: filesystem, tags: ["filesystem", "caddy"] }
-    - { role: caddy,      tags: ["caddy"] }
-    - { role: nodejs,     tags: ["nodejs"] }
+    - { role: users, tags: ["users"] }

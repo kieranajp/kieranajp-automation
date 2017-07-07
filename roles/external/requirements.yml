@@ -1,0 +1,6 @@
+- src: https://github.com/antoiner77/caddy-ansible
+  version: master
+  name: caddy
+- src: https://github.com/debops/ansible-nodejs
+  version: master
+  name: nodejs

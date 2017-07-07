@@ -1,0 +1,60 @@
+---
+- name: Ensure admin group exists
+  group:
+    name: admin
+    state: present
+
+- name: Allow admin group to use passwordless sudo
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: '^%admin'
+    line: '%admin ALL=(ALL) NOPASSWD: ALL'
+
+- name: Create user and generate an SSH key
+  user:
+    name: "{{ item.username }}"
+    groups: "{{ item.groups | join(',') }}"
+    shell: /bin/bash
+    generate_ssh_key: "{{ item.generate_ssh_key }}"
+    ssh_key_type: rsa
+  with_items: "{{ create_users }}"
+  register: user_created
+
+- name: Set authorized keys
+  authorized_key:
+    user: "{{ item.username }}"
+    key: "https://github.com/{{ item.github_keys }}.keys"
+  with_items: "{{ create_users }}"
+  when: item.github_keys
+
+- name: Ensure .ssh/config file exists
+  file: state=touch path="/home/{{ item.username }}/.ssh/config"
+  with_items: "{{ create_users }}"
+
+- name: Disable host key checking
+  lineinfile: dest=/home/{{ item.username }}/.ssh/config line='Host *\n \tStrictHostKeyChecking no\n\tUserKnownHostsFile=/dev/null'
+  with_items: "{{ create_users }}"
+
+- name: Assign ssh key to a variable
+  shell:
+    cat /home/{{ gitlab_access_user }}/.ssh/id_rsa.pub
+  register: gitlab_user_public_key
+  when: user_created.changed
+
+- name: Push the generated ssh key to the Gitlab instance
+  uri:
+    url: "{{ gitlab_api_url }}/user/keys"
+    method: POST
+    status_code: 201
+    body_format: json
+    body:
+      title: "{{ gitlab_key_title }}"
+      key: "{{ gitlab_user_public_key.stdout_lines.0 }}"
+    headers:
+      PRIVATE-TOKEN: "{{ gitlab_access_token }}"
+  when: user_created.changed
+
+- name: Disallow root SSH access
+  action: lineinfile dest=/etc/ssh/sshd_config regexp="^PermitRootLogin" line="PermitRootLogin no" state=present
+  notify: Restart sshd

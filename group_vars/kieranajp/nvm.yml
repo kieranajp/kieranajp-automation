@@ -1,0 +1,6 @@
+---
+nvm_default_node_version: "6"
+nvm_path: "/home/caddy/.nvm"
+nvm_packages:
+  - node-sass
+  - brunch

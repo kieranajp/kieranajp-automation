@@ -1,0 +1,17 @@
+create_users:
+  - username: kieran
+    groups:
+      - admin
+    github_keys: kieranajp
+    generate_ssh_key: no
+
+  - username: caddy
+    groups:
+      - admin
+    github_keys: False
+    generate_ssh_key: yes
+
+gitlab_access_user: caddy
+gitlab_access_token: "{{ GITLAB_ACCESS_TOKEN }}"
+gitlab_api_url: https://gitlab.com/api/v4/
+gitlab_key_title: "{{ gitlab_access_user }}"

@@ -1,0 +1,6 @@
+---
+nodejs__base_packages: [ 'nodejs-legacy' ]
+nodejs__upstream_version: 'node_6.x'
+nodejs__npm_packages:
+  - node-sass
+  - brunch

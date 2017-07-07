@@ -1,0 +1,10 @@
+apt_packages:
+  - git
+  - curl
+  - build-essential
+  - libssl-dev
+  - jq
+  - unzip
+  - mosh
+  - hugo
+  - xclip

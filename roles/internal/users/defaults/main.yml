@@ -1,0 +1,11 @@
+create_users:
+  - name: admin
+    groups:
+      - admin
+    github_keys: False
+    generate_ssh_key: no
+
+gitlab_access_user: admin
+gitlab_access_token: xxx
+gitlab_api_url: https://gitlab.com/api/v4/
+gitlab_key_title: "{{ gitlab_access_user }}"
