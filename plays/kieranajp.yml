@@ -14,5 +14,5 @@
   roles:
     - { role: apt,        tags: ["apt"] }
     - { role: filesystem, tags: ["filesystem", "caddy"] }
-    - { role: caddy,      tags: ["caddy"] }
     - { role: nodejs,     tags: ["nodejs"] }
+    - { role: caddy,      tags: ["caddy"] }
