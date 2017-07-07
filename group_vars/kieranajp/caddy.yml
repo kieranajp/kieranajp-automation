@@ -13,11 +13,13 @@ caddy_config: |
   tls me@kieranajp.co.uk
 
   root /srv/www/kieranajp.uk/public
+  basicauth /hugo {{ HUGO_USERNAME }} {{ HUGO_PASSWORD }}
 
   git gitlab.com/kieranajp/kieranajp.uk {
     path ../
     interval 600
     key /home/caddy/.ssh/id_rsa
     then brunch build
-    then hugo
   }
+
+  hugo /srv/www/kieranajp.uk /hugo
